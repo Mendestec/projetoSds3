@@ -1,4 +1,3 @@
-
 const DataTable = () => {
     return (
         <div className="table-responsive">
@@ -88,4 +87,5 @@ const DataTable = () => {
         </div>
     );
 }
+
 export default DataTable;
