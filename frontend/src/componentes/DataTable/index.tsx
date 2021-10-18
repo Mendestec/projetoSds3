@@ -2,7 +2,7 @@
 import axios from "axios";
 import Pagination from "componentes/Pagination";
 import { useEffect, useState } from "react";
-import { SalePage } from "types/sale";
+import { SalePage, SaleSum } from "types/sale";
 import { formatLocalDate } from "utils/formato";
 import { BASE_URL } from "utils/requests";
 
@@ -13,17 +13,21 @@ const [activePage, setActivePage] = useState(0);
     const [page, setPage] = useState<SalePage>({
         first: true,
         last: true,
-@@ -15,13 +18,19 @@ const DataTable = () => {
+        number: 0,
+        totalElements: 0,
+        totalPages: 0
     });
 
-    useEffect(() => {
-        axios.get(`${BASE_URL}/sales?page=1&size=20&sort=date,desc`)
-        axios.get(`${BASE_URL}/sales?page=${activePage}&size=20&sort=date,desc`)
-            .then(Response => {
-                setPage(Response.data);
-            });
-    }, []);
-    }, [activePage]);
+    useEffect( () => {
+        axios.get(BASE_URL + "/sales/amount-by-seller").then(Response => {
+            const data = Response.data as SaleSum[];
+            const myLabels = data.map(x => x.sellerName);
+            const mySeries = data.map(x => x.sum);
+            setChartData({ labels: myLabels, series: mySeries });
+            console.log(chartData);
+        });
+
+    }, [chartData])
 
     const changePage = (index: number) => {
         setActivePage(index);
@@ -35,12 +39,40 @@ const [activePage, setActivePage] = useState(0);
         <div className="table-responsive">
             <table className="table table-striped table-sm">
                 <thead>
-@@ -46,6 +55,7 @@ const DataTable = () => {
+                    <tr>
+                        <th>Data</th>
+                        <th>Vendedor</th>
+                        <th>Clientes visitados</th>
+                        <th>Negócios fechados</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {page.content?.map(item => (
+                        <tr key={item.id}>
+                            <td>{formatLocalDate(item.date, "dd/MM/yyyy")}</td>
+                            <td>Não renderizou</td>
+                            <td>{item.visited}</td>
+                            <td>{item.deals}</td>
+                            <td>{item.amount.toFixed(2)}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </div>
         </>
     );
+}
+
+export default DataTable;
+
+
+function setChartData(arg0: { labels: any[]; series: any[]; }) {
+    throw new Error("Function not implemented.");
+}
+
+function chartData(chartData: any) {
+    throw new Error("Function not implemented.");
 }
 */
 
