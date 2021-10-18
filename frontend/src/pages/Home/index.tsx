@@ -17,6 +17,7 @@ const Home = () => {
           Carregar dashboard
         </Link>
       </div>
+      <br />
       <Footer />
     </>
   );
